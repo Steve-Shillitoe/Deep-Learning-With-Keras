@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>8a13f253-38ea-49d3-8435-d7ef762eea26</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Data_Preparation.py</StartupFile>
+    <StartupFile>Keras_Regression_Problem.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,7 +22,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Data_Preparation.py" />
+    <Compile Include="Keras_Regression_Problem.py" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env\">
