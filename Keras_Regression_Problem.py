@@ -78,4 +78,9 @@ print('Loss for training data = ', model.evaluate(X_train, y_train, verbose=0))
 test_predictions = model.predict(X_test)
 test_predictions = pd.Series(test_predictions.reshape(300,))
 print(test_predictions)
+print('***********************************************')
+pred_df = pd.DataFrame(y_test, columns=['Test True Y'])
+pred_df = pd.concat([pred_df, test_predictions], axis=1) # axis=1, join along columns
+pred_df.columns = ['Test True Y', 'Model Predictions']
+print(pred_df)
 
