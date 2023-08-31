@@ -20,6 +20,7 @@ Choosing an optimizer and loss
   
 """
 
+from tabnanny import verbose
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -70,4 +71,11 @@ loss_df = pd.DataFrame(model.history.history)
 loss_df.plot()
 plt.show()
 
+#Evaluating the model
+print('Loss for test data = ', model.evaluate(X_test, y_test, verbose=0))
+print('Loss for training data = ', model.evaluate(X_train, y_train, verbose=0))
+
+test_predictions = model.predict(X_test)
+test_predictions = pd.Series(test_predictions.reshape(300,))
+print(test_predictions)
 
