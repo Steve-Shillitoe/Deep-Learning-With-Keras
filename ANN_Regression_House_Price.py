@@ -1,3 +1,4 @@
+from pickletools import optimize
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -18,9 +19,9 @@ print('\n Is there any missing data? A non-zero value in the right-hand column i
 print(df.isnull().sum())
 
 #plot histogram of price values, to identify outliers, which perhaps should be ignored
-plt.figure(figsize=(10,6))
-sns.histplot(df['price'])
-plt.show()
+#plt.figure(figsize=(10,6))
+#sns.histplot(df['price'])
+#plt.show()
 #This plot shows there's very little data for houses costing more than $2000,000
 # plt.figure(figsize=(5,15))
 # sns.countplot(df['bedrooms'])
@@ -54,10 +55,10 @@ plt.show()
 #The top 1% of houses, the most expensive, are skewing the data, so remove them
 non_top_1_perc = df.sort_values('price', ascending=False).iloc[216:]
 
-plt.figure(figsize=(12,8))
-sns.scatterplot(x='long', y='lat', data=non_top_1_perc,
-               edgecolor=None, alpha=0.2, palette='RdYlGn', hue='price')
-plt.show()
+# plt.figure(figsize=(12,8))
+# sns.scatterplot(x='long', y='lat', data=non_top_1_perc,
+#                edgecolor=None, alpha=0.2, palette='RdYlGn', hue='price')
+# plt.show()
 
 ###################################################################
 # Feature Engineering
@@ -76,13 +77,13 @@ df['year'] = df['date'].apply(lambda date: date.year)
 df['month'] = df['date'].apply(lambda date: date.month)
 print(df.head())
 
-df.groupby('month').mean()['price'].plot()
-plt.show()
+#df.groupby('month').mean()['price'].plot()
+#plt.show()
 
 #drop date & zipcode columns
 df = df.drop('date', axis=1)
 df = df.drop('zipcode', axis=1)
-print(df.columns())
+print(df.columns)
 
 #################################################################
 # Data Processing
@@ -100,6 +101,17 @@ X_test = scaler.transform(X_test)  #only transform test data
 # Build the model
 ###################################################################
 model = Sequential()
+
+model.add(Dense(units=19, activation='relu'))
+model.add(Dense(units=19, activation='relu'))
+model.add(Dense(units=19, activation='relu'))
+model.add(Dense(units=19, activation='relu'))
+model.add(Dense(1))
+
+model.compile(optimizer='adam', loss='mse')
+model.fit(x=X_train, y=y_train, validation_data=(X_test, y_test), batch_size=128, epochs=400)
+
+
 
 
 
