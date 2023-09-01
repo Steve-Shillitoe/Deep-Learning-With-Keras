@@ -25,19 +25,19 @@ plt.show()
 #print(df.corr()['price'].sort_values)
 #
 #Explore highly correlated values
-plt.figure(figsize=(10,5))
-sns.scatterplot(x='price', y='sqft_living', data=df)
-plt.show()
+# plt.figure(figsize=(10,5))
+# sns.scatterplot(x='price', y='sqft_living', data=df)
+# plt.show()
 
-plt.figure(figsize=(10,6))
-sns.boxplot(x='bedrooms', y='price',data=df)
-plt.show()
+# plt.figure(figsize=(10,6))
+# sns.boxplot(x='bedrooms', y='price',data=df)
+# plt.show()
 
 
 #Explore effect of location on house price
-plt.figure(figsize=(12,8))
-sns.scatterplot(x='price', y='long', data=df)
-plt.show()
+#plt.figure(figsize=(12,8))
+#sns.scatterplot(x='price', y='long', data=df)
+#plt.show()
 
 # plt.figure(figsize=(12,8))
 # sns.scatterplot(x='price', y='lat', data=df)
@@ -58,3 +58,24 @@ plt.show()
 ###################################################################
 # Feature Engineering
 ###################################################################
+# A useful mindset is 'should I make this continuous function categorical
+print(df.head())
+#Drop the id column as it has no influence on house price
+print('\nDrop the id column as it has no influence on house price\n')
+df = df.drop('id', axis=1)
+print(df.head)
+
+#convert date string to datetime object
+df['date'] = pd.to_datetime(df['date'])
+#create a year & month column
+df['year'] = df['date'].apply(lambda date: date.year)
+df['month'] = df['date'].apply(lambda date: date.month)
+print(df.head())
+
+df.groupby('month').mean()['price'].plot()
+plt.show()
+
+#drop date & zipcode columns
+df = df.drop('date', axis=1)
+df = df.drop('zipcode', axis=1)
+print(df.columns())
