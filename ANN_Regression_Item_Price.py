@@ -1,5 +1,6 @@
 """
-Using Keras to solve a regression problem
+Using Keras to solve a regression problem. The prediction of the price of an item for sale
+based on 2 of its features
 
 Choosing an optimizer and loss
    Keep in mind what kind of problem you are trying to solve:
