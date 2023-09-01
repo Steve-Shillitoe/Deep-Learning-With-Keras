@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import mean_absolute_error, mean_squared_error
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 
@@ -111,7 +112,9 @@ model.add(Dense(1))
 model.compile(optimizer='adam', loss='mse')
 model.fit(x=X_train, y=y_train, validation_data=(X_test, y_test), batch_size=128, epochs=400)
 
-
+losses = pd.DataFrame(model.history.history)
+losses.plot()
+plt.show()
 
 
 
