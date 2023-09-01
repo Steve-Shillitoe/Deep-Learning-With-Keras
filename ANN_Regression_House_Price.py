@@ -2,6 +2,10 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
 
 df = pd.read_csv('kc_house_data.csv')  #real data from a house price website
 
@@ -79,3 +83,24 @@ plt.show()
 df = df.drop('date', axis=1)
 df = df.drop('zipcode', axis=1)
 print(df.columns())
+
+#################################################################
+# Data Processing
+################################################################
+#Separate features from the label
+X = df.drop('price', axis=1).values
+y = df['price'].values
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=101)
+scaler = MinMaxScaler(feature_range=(0,1) )
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)  #only transform test data
+
+###################################################################
+# Build the model
+###################################################################
+model = Sequential()
+
+
+
+
