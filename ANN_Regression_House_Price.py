@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import mean_absolute_error, mean_squared_error
+from sklearn.metrics import (mean_absolute_error, mean_squared_error, 
+            mean_absolute_percentage_error, explained_variance_score)
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 
@@ -116,6 +117,23 @@ losses = pd.DataFrame(model.history.history)
 losses.plot()
 plt.show()
 
+#Make predictions with X_test
+predictions = model.predict(X_test)
+print("Predictions = {}".format(predictions))
 
+#Compare predictions to what we are the correct values
+print("\n mean_absolute_percentage_error  = ", mean_absolute_percentage_error(y_test, predictions)*100)
+print("\n explained_variance_score = ", explained_variance_score(y_test, predictions))
 
+plt.figure(figsize=(12,6))
+sns.scatterplot(y_test, predictions[0])
+plt.plot(y_test, y_test, 'r')
+plt.show()
+print('The plot shows that the model is thrown out by the expensive house outliers. So we should ignore them & only train with the bottom 99% of houses')
 
+#Let's do a test prediction with the first house in the data frame
+single_house = df.drop('price', axis=1).iloc[0]
+#Convert this data to a numpy array and rescale it
+single_house = scaler.transform(single_house.values.reshape(-1,19))
+print('scaled single house data = {}'.format(single_house))
+print('single house  = predicted price = {}'.format(model.predict(single_house)))
