@@ -1,8 +1,8 @@
-from pickletools import optimize
+#from pickletools import optimize
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import numpy as np
+#import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import (mean_absolute_error, mean_squared_error, 
@@ -125,8 +125,11 @@ print("Predictions = {}".format(predictions))
 print("\n mean_absolute_percentage_error  = ", mean_absolute_percentage_error(y_test, predictions)*100)
 print("\n explained_variance_score = ", explained_variance_score(y_test, predictions))
 
+#pred_df = pd.DataFrame(y_test, columns=['Actual House Price'])
+#pred_df = pd.concat([pred_df, predictions], axis=1) # axis=1, join along columns
+#pred_df.columns = ['Actual House Price', 'Model Predictions']
 plt.figure(figsize=(12,6))
-sns.scatterplot(y_test, predictions[0])
+sns.scatterplot(data=predictions)
 plt.plot(y_test, y_test, 'r')
 plt.show()
 print('The plot shows that the model is thrown out by the expensive house outliers. So we should ignore them & only train with the bottom 99% of houses')
