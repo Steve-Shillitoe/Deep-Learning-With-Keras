@@ -41,7 +41,8 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import (mean_absolute_error, mean_squared_error, 
-            mean_absolute_percentage_error, explained_variance_score)
+            mean_absolute_percentage_error, explained_variance_score, classification_report, confusion_matrix)
+import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.callbacks import EarlyStopping
@@ -57,7 +58,7 @@ print(df.describe().transpose())
 
 #Is the label class well balanced?
 sns.countplot(x='benign_0__mal_1', data=df)
-plt.show()
+#plt.show()
 
 #Let's see if the label class is highly correlated with its features
 print('\n Lets see if the label class is highly correlated with its features')
@@ -65,7 +66,7 @@ print(df.corr()['benign_0__mal_1'].sort_values())
 #Lets look at a plot of this data. Exclude the last classification column
 plt.figure(figsize=(12,6))
 df.corr()['benign_0__mal_1'][:-1].sort_values().plot(kind='bar')
-plt.show()
+#plt.show()
 
 #############################################################
 # Data Preparation
@@ -106,14 +107,39 @@ X_test = scaler.transform(X_test)
 model = Sequential()
 
 model.add(Dense(units=30, activation='relu'))
-
+model.add(Dropout(rate=0.5)) #To prevent overfitting
 model.add(Dense(units=15, activation='relu'))
+model.add(Dropout(rate=0.5)) #To prevent overfitting
 #Output layer
 model.add(Dense(units=1, activation='sigmoid'))  #Binary Classification, sigmoid outputs 0 to 1
 
 model.compile(loss='binary_crossentropy', optimizer='adam')
 
-#train the model
-model.fit(x=X_train, y=y_train, epochs=600, validation_data=(X_test, y_test))
+##o prevent overfitting
+#we wish to minimise validation loss, loss = 0 is a perfect fit
+#patience =25, we will wait 25 epochs after a stopping point is detected
+early_stop = EarlyStopping(monitor='val_loss', mode='min',
+                           verbose=1, patience=25)
 
+#train the model
+model.fit(x=X_train, y=y_train, epochs=600, validation_data=(X_test, y_test),
+                callbacks=[early_stop])
+losses = pd.DataFrame(model.history.history)
+losses.plot()
+#plt.show()
+#In the plot, we that training loss & validation loss are decreasing together and flattening out together
+
+threshold = 0.5  # Adjust this threshold as needed
+predicted_labels = (model.predict(X_test) > threshold).astype(int)
+
+# Get the predicted class labels
+#predicted_classes = tf.argmax(predictions, axis=-1).numpy()
+#print(predicted_classes)
+
+print(classification_report(y_test, predicted_labels))
+print('**********************************************************************')
+print(confusion_matrix(y_test, predicted_labels))
+#THe confusion matrix is [[TP  FP]
+#                           FN TN]]
+# So we have 1 FP & 5 FN
 
