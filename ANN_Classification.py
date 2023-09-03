@@ -1,3 +1,11 @@
+"""
+In this module a classification task is performed with TensorFlow.
+
+This inclueds identifying and dealing with overfitting through Early Stopping Callbacks 
+and Dropout Layers.
+
+"""
+
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt

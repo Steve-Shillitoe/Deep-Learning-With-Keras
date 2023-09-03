@@ -1,4 +1,11 @@
-#from pickletools import optimize
+"""
+In this module an ANN is used to predict the price of a house based on its features.
+
+The model is trained using existing house features and price data.
+
+An data analysis is performed in order to identify data points that should be
+excluded from the training.
+"""
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
