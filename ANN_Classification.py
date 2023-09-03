@@ -11,8 +11,29 @@ Dropout Layers - Dropout layer can be added to layers to 'turn off' neurons to p
 overfitting.  Each Dropout Layer will turn off a user-defined percentage of neurons in the
 previous layer with each batch of data. 
 
+In TensorFlow, the model.compile function is used to configure the training process for a neural network model. 
+It takes several arguments, including the loss and optimizer properties, 
+which are essential for training a machine learning model. 
+Here's a brief explanation of each:
+
+Loss Function (loss):
+The loss function (also known as the objective or cost function) quantifies how well your model's predictions match the actual target values during training.
+It calculates a single scalar value that represents the error or discrepancy between the predicted output and the true target.
+The goal during training is to minimize this loss, as a lower loss indicates better model performance.
+The choice of the loss function depends on the type of machine learning task. For example, Mean Squared Error (MSE) is commonly used for regression tasks, while Categorical Crossentropy is used for classification tasks.
+
+Optimizer (optimizer):
+The optimizer is responsible for updating the model's weights and biases during training to minimize the loss function.
+It implements an optimization algorithm, such as Stochastic Gradient Descent (SGD), Adam, RMSprop, etc., to adjust the model's parameters iteratively.
+Different optimizers have their own update rules and hyperparameters that influence the training process, convergence speed, and generalization performance of the model.
+The choice of optimizer and its hyperparameters can significantly affect the training process, and it's often a matter of experimentation to find the best combination for a specific problem.
+Here's a basic example of how you would use these properties in the model.compile function:
+
+
 """
 
+#from pickletools import optimize
+from calendar import EPOCH
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -22,6 +43,8 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import (mean_absolute_error, mean_squared_error, 
             mean_absolute_percentage_error, explained_variance_score)
 from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
+from tensorflow.keras.callbacks import EarlyStopping
 
 df = pd.read_csv('cancer_classification.csv')
 
@@ -48,7 +71,7 @@ plt.show()
 # Data Preparation
 #############################################################
 #Get numpy arrays of data
-X = df.drop('benign_0__mal_1', axes=1).values  #Drop label column from training data
+X = df.drop('benign_0__mal_1', axis=1).values  #Drop label column from training data
 y = df['benign_0__mal_1'].values
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=101)
@@ -57,7 +80,40 @@ scaler = MinMaxScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
+###############################################################
+# Build the model
+###############################################################
+#X_train.shape = (436, 30)  436 rows of 30 features
+# model = Sequential()
 
+# model.add(Dense(units=30, activation='relu'))
 
+# model.add(Dense(units=15, activation='relu'))
+# #Output layer
+# model.add(Dense(units=1, activation='sigmoid'))  #Binary Classification, sigmoid outputs 0 to 1
+
+# model.compile(loss='binary_crossentropy', optimizer='adam')
+
+# #train the model
+# model.fit(x=X_train, y=y_train, epochs=600, validation_data=(X_test, y_test))
+
+# losses = pd.DataFrame(model.history.history)
+# losses.plot()
+# plt.show()
+#Above plot shows overfitting due to large number of epochs
+
+#New model, configured to avoid overfitting
+model = Sequential()
+
+model.add(Dense(units=30, activation='relu'))
+
+model.add(Dense(units=15, activation='relu'))
+#Output layer
+model.add(Dense(units=1, activation='sigmoid'))  #Binary Classification, sigmoid outputs 0 to 1
+
+model.compile(loss='binary_crossentropy', optimizer='adam')
+
+#train the model
+model.fit(x=X_train, y=y_train, epochs=600, validation_data=(X_test, y_test))
 
 
