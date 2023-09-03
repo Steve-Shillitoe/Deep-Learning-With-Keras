@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>8a13f253-38ea-49d3-8435-d7ef762eea26</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>ANN_Classification.py</StartupFile>
+    <StartupFile>ANN_Loan_Repay_Or_Not.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,6 +23,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ANN_Classification.py" />
+    <Compile Include="ANN_Loan_Repay_Or_Not.py" />
     <Compile Include="ANN_Regression_House_Price.py" />
     <Compile Include="ANN_Regression_Item_Price.py" />
   </ItemGroup>
