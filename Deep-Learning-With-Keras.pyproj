@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
+    <Content Include="cancer_classification.csv" />
     <Content Include="fake_reg.csv" />
     <Content Include="kc_house_data.csv" />
     <Content Include="README.md" />
