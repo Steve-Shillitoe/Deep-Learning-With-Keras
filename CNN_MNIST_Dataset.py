@@ -83,4 +83,18 @@ plt.show()
 print(model.metrics_names)
 print(model.evaluate(x_test, y_cat_test, verbose=0))
 
-predictions = model.predict(x_test)
+
+threshold = 0.5  # Adjust this threshold as needed
+predicted_labels = (model.predict(x_test) > threshold).astype(int)
+
+# Get the predicted class labels
+#predicted_classes = tf.argmax(predictions, axis=-1).numpy()
+#print(predicted_classes)
+
+print(classification_report(y_cat_test, predicted_labels))
+print('\n \n')
+#print(confusion_matrix(y_cat_test, predicted_labels))
+
+test_number = x_test[0]
+predicted_label = (model.predict(test_number.reshape(1,28,28,1)) > threshold).astype(int)
+print(predicted_label)
