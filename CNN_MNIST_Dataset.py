@@ -28,6 +28,7 @@ from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Conv2D, MaxPool2D, Flatten
 from tensorflow.keras.callbacks import EarlyStopping
+from sklearn.metrics import classification_report, confusion_matrix
 
 
 ##########################################################
@@ -68,3 +69,18 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accur
 early_stop = EarlyStopping(monitor='val_loss', patience=1) # patience=1 == wait one epoch
 
 model.fit(x_train, y_cat_train, epochs=10, validation_data=(x_test, y_cat_test), callbacks=[early_stop])
+
+###########################################################################
+# Evaluate the model
+###########################################################################
+metrics = pd.DataFrame(model.history.history)
+print('metrics = ', metrics)
+
+metrics[['loss', 'val_loss']].plot()
+metrics[['accuracy', 'val_accuracy']].plot()
+plt.show()
+
+print(model.metrics_names)
+print(model.evaluate(x_test, y_cat_test, verbose=0))
+
+predictions = model.predict(x_test)
