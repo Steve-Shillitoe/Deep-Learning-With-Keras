@@ -76,4 +76,27 @@ early_stop = EarlyStopping(monitor='val_loss', patience=2) # patience=1 == wait 
 
 model.fit(x_train, y_cat_train, epochs=15, validation_data=(x_test, y_cat_test), callbacks=[early_stop])
 
+####################################################################
+# Evaluating the model
+####################################################################
+metrics = pd.DataFrame(model.history.history)
+print('metrics = ', metrics)
 
+metrics[['loss', 'val_loss']].plot()
+metrics[['accuracy', 'val_accuracy']].plot()
+plt.show()
+
+print(model.metrics_names)
+print(model.evaluate(x_test, y_cat_test, verbose=0))
+
+
+threshold = 0.5  # Adjust this threshold as needed
+predicted_labels = (model.predict(x_test) > threshold).astype(int)
+
+print(classification_report(y_cat_test, predicted_labels))
+print('\n \n')
+#print(confusion_matrix(y_cat_test, predicted_labels))
+
+test_number = x_test[0]
+predicted_label = (model.predict(test_number.reshape(1,32,32,1)) > threshold).astype(int)
+print(predicted_label)
