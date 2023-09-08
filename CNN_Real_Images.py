@@ -88,7 +88,7 @@ train_image_gen = image_gen.flow_from_directory(train_path,
 
 test_image_gen = image_gen.flow_from_directory(test_path,
                                                 target_size=image_shape[:2],
-                                                color_mode = 'rgb',a
+                                                color_mode = 'rgb',
                                                 batch_size = batch_size,
                                                 class_mode = 'binary',
                                                 shuffle=False)  
