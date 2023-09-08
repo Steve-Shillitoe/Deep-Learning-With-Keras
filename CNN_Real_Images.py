@@ -1,3 +1,4 @@
+from random import shuffle
 from numpy._typing import _128Bit
 import pandas as pd
 import numpy as np
@@ -6,6 +7,10 @@ import matplotlib.pyplot as plt
 from matplotlib.image import imread
 import os
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.models import Sequential, load_model
+from tensorflow.keras.layers import Dense, Conv2D, MaxPool2D, Dropout, Flatten
+from tensorflow.keras.callbacks import EarlyStopping
+
 
 
 ############################################################
@@ -50,8 +55,48 @@ image_gen = ImageDataGenerator(rotation_range=20,
 ###################################################################################
 ### Create the model
 ###################################################################################
+model = Sequential()
 
+model.add(Conv2D(filters=32, kernel_size=(3,3), input_shape=image_shape, activation='relu'))
+model.add(MaxPool2D(pool_size=(2,2)))
 
-    
+model.add(Conv2D(filters=64, kernel_size=(3,3), input_shape=image_shape, activation='relu'))
+model.add(MaxPool2D(pool_size=(2,2)))
 
+model.add(Conv2D(filters=64, kernel_size=(3,3), input_shape=image_shape, activation='relu'))
+model.add(MaxPool2D(pool_size=(2,2)))
+
+model.add(Flatten())
+
+model.add(Dense(units=128, activation='relu'))
+
+model.add(Dropout(0.5)) #Turn off half the neurons to prevent overfitting
+
+model.add(Dense(units=1, activation='sigmoid'))
+
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+early_stop = EarlyStopping(monitor='val_loss', patience=2)
+
+batch_size = 16
+
+train_image_gen = image_gen.flow_from_directory(train_path,
+                                                target_size=image_shape[:2],
+                                                color_mode = 'rgb',
+                                                batch_size = batch_size,
+                                                class_mode = 'binary')  
+
+test_image_gen = image_gen.flow_from_directory(test_path,
+                                                target_size=image_shape[:2],
+                                                color_mode = 'rgb',a
+                                                batch_size = batch_size,
+                                                class_mode = 'binary',
+                                                shuffle=False)  
+
+# results = model.fit_generator(train_image_gen,
+#                               epochs=20, 
+#                               validation_data=test_image_gen,
+#                               call_backs=['early_stop'])
+
+model = load_model('malaria_detector.h5')
 
