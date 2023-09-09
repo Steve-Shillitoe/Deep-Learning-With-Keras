@@ -1,3 +1,11 @@
+"""
+In this module  TensorFlow 2 and Keras are used to build a Convolutional Neural Network that 
+can identify cells with the maleria parasite.  
+
+Real images of varying size are used to train the model.
+
+"""
+
 from random import shuffle
 from numpy._typing import _128Bit
 import pandas as pd
@@ -6,7 +14,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib.image import imread
 import os
-from tensorflow.keras.preprocessing.image import ImageDataGenerator, image
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.preprocessing import image
 from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense, Conv2D, MaxPool2D, Dropout, Flatten
 from tensorflow.keras.callbacks import EarlyStopping
@@ -49,7 +58,7 @@ image_gen = ImageDataGenerator(rotation_range=20,
                                shear_range=0.1,
                                zoom_range=0.1,
                                horizontal_flip=True,
-                               fill_mode='')
+                               fill_mode='nearest')
 
 #image_gen.flow_from_directory(train_path)
 
@@ -94,13 +103,13 @@ test_image_gen = image_gen.flow_from_directory(test_path,
                                                 class_mode = 'binary',
                                                 shuffle=False)  
 
-results = model.fit_generator(train_image_gen,
-                              epochs=20, 
-                              validation_data=test_image_gen,
-                              call_backs=['early_stop'])
+# model.fit(train_image_gen,
+#         epochs=20, 
+#         validation_data=test_image_gen,
+#         callbacks=[early_stop])
 
 #To save time, load an existing model
-#model = load_model('malaria_detector.h5')
+model = load_model('malaria_detector.h5')
 
 ###################################################################################
 ### Evaluate the model
@@ -108,17 +117,17 @@ results = model.fit_generator(train_image_gen,
 prediction = model.predict(test_image_gen)
 prediction = prediction > 0.5
 print('prediction = {}'.format(prediction))
-print('\n', classification_report(test_image_gen.classes, prediction))
-print('\n', confusion_matrix(test_image_gen.classes, prediction))
+print('\n classification report = ', classification_report(test_image_gen.classes, prediction))
+print('\n confusion matrix = ', confusion_matrix(test_image_gen.classes, prediction))
 
 test_img = image.load_img('cell_images\\train\parasitized\\C100P61ThinF_IMG_20150918_144104_cell_162.png',
                target_size=image_shape)
 test_img_arr = image.img_to_array(test_img)
 test_img_arr = np.expand_dims(test_img_arr, axis=0)
-print(test_img.arr.shape)
-print(model.predict(test_img_arr))
+print('Test image shape = ',test_img_arr.shape)
+print('Try to predict a parasitized cell - ', model.predict(test_img_arr))
 print('\n')
-print(train_image_gen.class_indices)
+print('class indices = ', train_image_gen.class_indices)
 
 
 
