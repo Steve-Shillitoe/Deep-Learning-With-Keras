@@ -6,10 +6,11 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib.image import imread
 import os
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.preprocessing.image import ImageDataGenerator, image
 from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense, Conv2D, MaxPool2D, Dropout, Flatten
 from tensorflow.keras.callbacks import EarlyStopping
+from sklearn.metrics import classification_report, confusion_matrix
 
 
 
@@ -93,10 +94,32 @@ test_image_gen = image_gen.flow_from_directory(test_path,
                                                 class_mode = 'binary',
                                                 shuffle=False)  
 
-# results = model.fit_generator(train_image_gen,
-#                               epochs=20, 
-#                               validation_data=test_image_gen,
-#                               call_backs=['early_stop'])
+results = model.fit_generator(train_image_gen,
+                              epochs=20, 
+                              validation_data=test_image_gen,
+                              call_backs=['early_stop'])
 
-model = load_model('malaria_detector.h5')
+#To save time, load an existing model
+#model = load_model('malaria_detector.h5')
+
+###################################################################################
+### Evaluate the model
+###################################################################################
+prediction = model.predict(test_image_gen)
+prediction = prediction > 0.5
+print('prediction = {}'.format(prediction))
+print('\n', classification_report(test_image_gen.classes, prediction))
+print('\n', confusion_matrix(test_image_gen.classes, prediction))
+
+test_img = image.load_img('cell_images\\train\parasitized\\C100P61ThinF_IMG_20150918_144104_cell_162.png',
+               target_size=image_shape)
+test_img_arr = image.img_to_array(test_img)
+test_img_arr = np.expand_dims(test_img_arr, axis=0)
+print(test_img.arr.shape)
+print(model.predict(test_img_arr))
+print('\n')
+print(train_image_gen.class_indices)
+
+
+
 
