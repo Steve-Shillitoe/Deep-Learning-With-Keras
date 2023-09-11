@@ -41,3 +41,17 @@ y_cat_train = to_categorical(y_train, 10)  #10 classes 0-9
 #Build the model
 ##################################################################
 model = Sequential()
+
+model.add(Conv2D( filters=32, kernel_size=(4,4), strides=(1,1), padding='valid', input_shape=(28,28,1), activation='relu'))
+model.add(MaxPool2D(pool_size=(2,2)))
+model.add(Flatten()) #28*28 -> 784 1D array
+model.add(Dense(units=128, activation='relu'))
+#Output layer  multi-class -> softmax
+model.add(Dense(units=10, activation='softmax')) #units=10 as 10 classes, activation='softmax' as multiple classification
+
+model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+
+#################################################################
+# Train the model
+#################################################################
+model.fit(x_train, y_cat_train, epochs=10, validation_data=(x_test, y_cat_test))
