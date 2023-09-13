@@ -2,7 +2,7 @@
 In this module a simple Recurrent Neural Network is created that predicts
 values in a sine curve time sequence.
 
-TimeseriesGenerator is used to generate time series data samples
+TimeseriesGenerator is used to generate time series data samples.
 
 TimeseriesGenerator is a utility class provided by TensorFlow's Keras API (tf.keras)
 for generating time series data samples from a given sequence of data. 
@@ -24,6 +24,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing.sequence import TimeseriesGenerator
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, SimpleRNN, LSTM
 from sklearn.preprocessing import MinMaxScaler
 
 #####################################################
@@ -32,8 +34,8 @@ from sklearn.preprocessing import MinMaxScaler
 x = np.linspace(0, 50, 501)  #Returns 501 evenly spaced numbers over range 0->50
 y = np.sin(x)
 
-plt.plot(x,y)
-plt.show()  #Shows a sine wave from 0 to 50
+#plt.plot(x,y)
+#plt.show()  #Shows a sine wave from 0 to 50
 
 df = pd.DataFrame(data=y, index=x, columns=['Sine'])  #column in sine of index value, x
 
@@ -55,10 +57,34 @@ scaled_test = scaler.transform(test) #Only transform test data, do not fit
 ########################################################
 # TimeseriesGenerator
 ########################################################
-length = 25  #Feed model 25 data items and ask it to predict the 26th data item
+length = 50  #Feed model 50 data items which will cover one cycle of the time series
 batch_size = 1
 generator = TimeseriesGenerator(scaled_train, scaled_train,
                                 length=length, batch_size=batch_size)
+
+########################################################
+# Create the model
+########################################################
+n_features = 1
+model = Sequential()
+#input layer
+model.add(SimpleRNN(units=50, input_shape=(length, n_features)))  #units=50 as batch size is 50
+#output layer
+model.add(Dense(units=1))  #only 1 prediction
+model.compile(optimizer='adam', loss='mse') #loss='mse' as values are continuous
+print(model.summary())
+
+#######################################################
+# Train the model
+#######################################################
+model.fit_generator(generator, epochs=5)
+
+######################################################
+# Evaluate the model
+#####################################################
+losses = pd.DataFrame(model.history.history)
+losses.plot()
+plt.show()
 
 
     
