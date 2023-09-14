@@ -77,7 +77,7 @@ print(model.summary())
 #######################################################
 # Train the model
 #######################################################
-model.fit_generator(generator, epochs=5)
+model.fit(generator, epochs=5)
 
 ######################################################
 # Evaluate the model
@@ -91,7 +91,7 @@ plt.show()
 test_predictions = []
 
 first_eval_batch = scaled_train[-length:]
-current_batch = scaled_train.reshape((1, length, n_features))
+current_batch = first_eval_batch.reshape((1, length, n_features))
 
 for i in range(len(test)):
     current_pred = model.predict(current_batch)[0]
