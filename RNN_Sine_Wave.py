@@ -86,5 +86,11 @@ losses = pd.DataFrame(model.history.history)
 losses.plot()
 plt.show()
 
+first_eval_batch = scaled_train[-length:]
+first_eval_batch = scaled_train.reshape((1, length, n_features))
+print('predicted {}, test {}'.format(model.predict(first_eval_batch), scaled_test[0]))
+
+test_predictions = []
+
 
     
