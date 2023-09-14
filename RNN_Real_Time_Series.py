@@ -33,4 +33,11 @@ length = 12 #12 months
 generator = TimeseriesGenerator(scaled_training_data, scaled_training_data, 
                                 length=length, batch_size=1)
 
+#################################################
+## Build the model
+#################################################
+n_features = 1
+model = Sequential()
+model.add(LSTM())
+
 
