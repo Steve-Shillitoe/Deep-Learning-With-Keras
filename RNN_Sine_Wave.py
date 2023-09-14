@@ -20,12 +20,14 @@ It simplifies the process of handling time series data and ensures
 that your model receives input data in the appropriate format.
 
 """
+from gc import callbacks
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing.sequence import TimeseriesGenerator
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, SimpleRNN, LSTM
+from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.preprocessing import MinMaxScaler
 
 #####################################################
@@ -108,10 +110,94 @@ true_predictions = scaler.inverse_transform(test_predictions)
 #Add Predictions to pandas test DataFrame
 test['Predictions'] = true_predictions
 print('test data frame = {}'.format(test))
+# #plot data
+# test.plot(figsize=(12,8))
+# plt.show()
+    
+
+###############################################################
+### Add early stopping & use a LSTM for performance comparison
+###############################################################
+early_stop = EarlyStopping(monitor='val_loss', patience=2)
+
+#take 49 data points and predict the 50th point.
+#scaled_test has 50 data points, so length must be 50 - 1 = 49
+length = 49
+generator = TimeseriesGenerator(scaled_train, scaled_train, length=length, batch_size=1)
+validation_generator = TimeseriesGenerator(scaled_test, scaled_test, length=length, batch_size=1)
+
+model = Sequential()
+#input layer
+model.add(LSTM(units=50, input_shape=(length, n_features)))  #units=50 as batch size is 50
+#output layer
+model.add(Dense(units=1))  #only 1 prediction
+model.compile(optimizer='adam', loss='mse') #loss='mse' as values are continuous
+print(model.summary())
+model.fit(generator, epochs=20, 
+          validation_data=validation_generator,
+          callbacks=[early_stop])
+
+test_predictions = []
+
+first_eval_batch = scaled_train[-length:]
+current_batch = first_eval_batch.reshape((1, length, n_features))
+
+for i in range(len(test)):
+    current_pred = model.predict(current_batch)[0]
+    test_predictions.append(current_pred)
+    
+    #To predict one step into the future, move current batch one step forward
+    #current_batch[:,1:,:] gets rid of first item
+    #and replaces it with [[current_pred]]
+    current_batch = np.append(current_batch[:,1:,:], [[current_pred]], axis=1)
+    
+true_predictions = scaler.inverse_transform(test_predictions)
+
+#Now compare predictions with test data
+#Add Predictions to pandas test DataFrame
+test['LSTM_Predictions'] = true_predictions
+print('test data frame = {}'.format(test))
 #plot data
 test.plot(figsize=(12,8))
 plt.show()
+
+##############################################
+### Forecast into the future
+#############################################
+full_scaler = MinMaxScaler()
+scaled_full_data = full_scaler.fit_transform(df)
+generator = TimeseriesGenerator(scaled_full_data, scaled_full_data, length=length, batch_size=1 )
+
+model = Sequential()
+#input layer
+model.add(LSTM(units=50, input_shape=(length, n_features)))  #units=50 as batch size is 50
+#output layer
+model.add(Dense(units=1))  #only 1 prediction
+model.compile(optimizer='adam', loss='mse') #loss='mse' as values are continuous
+print(model.summary())
+model.fit(generator, epochs=6)
+
+forecast = []
+
+first_eval_batch = scaled_train[-length:]
+current_batch = first_eval_batch.reshape((1, length, n_features))
+
+for i in range(25):  #choice of 25 is arbitrary
+    current_pred = model.predict(current_batch)[0]
+    forecast.append(current_pred)
     
+    #To predict one step into the future, move current batch one step forward
+    #current_batch[:,1:,:] gets rid of first item
+    #and replaces it with [[current_pred]]
+    current_batch = np.append(current_batch[:,1:,:], [[current_pred]], axis=1)
+    
+forecast = scaler.inverse_transform(forecast)
+
+forecast_index = np.arange(50.1, 52.6, step=0.1)
+
+plt.plot(df.index, df['Sine'])
+plt.plot(forecast_index, forecast)
+plt.show()
 
 
     
