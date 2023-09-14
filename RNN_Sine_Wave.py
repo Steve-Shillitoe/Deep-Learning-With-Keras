@@ -86,11 +86,32 @@ losses = pd.DataFrame(model.history.history)
 losses.plot()
 plt.show()
 
-first_eval_batch = scaled_train[-length:]
-first_eval_batch = scaled_train.reshape((1, length, n_features))
-print('predicted {}, test {}'.format(model.predict(first_eval_batch), scaled_test[0]))
+#print('predicted {}, test {}'.format(model.predict(first_eval_batch), scaled_test[0]))
 
 test_predictions = []
+
+first_eval_batch = scaled_train[-length:]
+current_batch = scaled_train.reshape((1, length, n_features))
+
+for i in range(len(test)):
+    current_pred = model.predict(current_batch)[0]
+    test_predictions.append(current_pred)
+    
+    #To predict one step into the future, move current batch one step forward
+    #current_batch[:,1:,:] gets rid of first item
+    #and replaces it with [[current_pred]]
+    current_batch = np.append(current_batch[:,1:,:], [[current_pred]], axis=1)
+    
+true_predictions = scaler.inverse_transform(test_predictions)
+
+#Now compare predictions with test data
+#Add Predictions to pandas test DataFrame
+test['Predictions'] = true_predictions
+print('test data frame = {}'.format(test))
+#plot data
+test.plot(figsize=(12,8))
+plt.show()
+    
 
 
     
