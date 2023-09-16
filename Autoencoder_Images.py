@@ -1,11 +1,17 @@
-import pandas as pd
-import numpy as np
+"""
+In this module an autoencoder is created that removes noise from an image.
+
+Noise is added to the images of handwritten digits 0-9 in the MNIST dataset
+using the GaussianNoise class.  The autoencoder is then used to remove this noise.
+"""
+#import pandas as pd
+#import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Flatten, Reshape, GaussianNoise
-from tensorflow.keras.optimizers import SGD
+#from tensorflow.keras.optimizers import SGD
 
 #####################################################
 # Image processing
