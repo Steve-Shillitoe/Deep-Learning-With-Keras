@@ -2,11 +2,16 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelBinarizer, MinMaxScaler
 import matplotlib.pyplot as plt
+import joblib
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.callbacks import EarlyStopping
 
+
+#####################################################
+# Prepare the data
+####################################################
 iris = pd.read_csv('iris.csv')
 print(iris.head())
 
@@ -29,26 +34,55 @@ scaler.fit(X_train)
 scaled_X_train = scaler.transform(X_train)
 scaled_X_test = scaler.transform(X_test)
 
+##################################################
+# Build the model
+#################################################
+# model = Sequential()
+# model.add(Dense(units=4, activation='relu', input_shape=[4,]))
+# model.add(Dense(units=3, activation='softmax'))
+
+# model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+# early_stop = EarlyStopping(patience=10)
+
+# model.fit(x=scaled_X_train, y=y_train, validation_data=(scaled_X_test, y_test), 
+#           epochs=300, callbacks=[early_stop])
+
+####################################################################
+# Evaluate the model
+###################################################################
+# metrics = pd.DataFrame(model.history.history)
+# print(metrics)
+
+# metrics[['loss', 'val_loss']].plot()
+# plt.show()
+# metrics[['accuracy', 'val_accuracy']].plot()
+# plt.show()
+
+# print(model.evaluate(scaled_X_test, y_test, verbose=0))
+
+#######################################################
+# Prepare for deployment
+######################################################
+epochs = 300
+scaled_X = scaler.fit_transform(X)
+
+#Build the model
 model = Sequential()
 model.add(Dense(units=4, activation='relu', input_shape=[4,]))
 model.add(Dense(units=3, activation='softmax'))
 
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-early_stop = EarlyStopping(patience=10)
+#early_stop = EarlyStopping(patience=10)
 
-model.fit(x=scaled_X_train, y=y_train, validation_data=(scaled_X_test, y_test), 
-          epochs=300, callbacks=[early_stop])
+model.fit(x=scaled_X, y=y_train, epochs=epochs)
+model.save('final_iris_model.h5')
+joblib.dump(scaler, 'iris_scaler.pkl')
 
-metrics = pd.DataFrame(model.history.history)
-print(metrics)
+flower_model = load_model('final_iris_model.h5')
+flower_scaler = joblib.load('iris_scaler.pkl')
 
-metrics[['loss', 'val_loss']].plot()
-plt.show()
-metrics[['accuracy', 'val_accuracy']].plot()
-plt.show()
-
-print(model.evaluate(scaled_X_test, y_test, verbose=0))
 
 
 
