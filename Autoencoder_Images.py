@@ -3,6 +3,9 @@ In this module an autoencoder is created that removes noise from an image.
 
 Noise is added to the images of handwritten digits 0-9 in the MNIST dataset
 using the GaussianNoise class.  The autoencoder is then used to remove this noise.
+
+For comparison purposes, an original image, the same image with noise added and
+the same image with that noise removed are displayed.
 """
 #import pandas as pd
 #import numpy as np
