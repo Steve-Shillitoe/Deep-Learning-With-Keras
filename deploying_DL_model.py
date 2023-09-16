@@ -76,7 +76,7 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 
 #early_stop = EarlyStopping(patience=10)
 
-model.fit(x=scaled_X, y=y_train, epochs=epochs)
+model.fit(x=scaled_X, y=y, epochs=epochs)
 model.save('final_iris_model.h5')
 joblib.dump(scaler, 'iris_scaler.pkl')
 
