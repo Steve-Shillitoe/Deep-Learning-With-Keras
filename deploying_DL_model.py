@@ -84,6 +84,21 @@ flower_model = load_model('final_iris_model.h5')
 flower_scaler = joblib.load('iris_scaler.pkl')
 
 
+def return_prediction(model, scaler, sample_json):
+    s_len = sample_json['sepal_length']
+    s_wid = sample_json['sepal_width']
+    p_len = sample_json['petal_length']
+    p_wid = sample_json['petal_width']
+    
+    flower = [[s_len, s_wid, p_len, p_wid]]
+    flower = scaler.transform(flower)
+    
+    prediction = model.predict(flower)  
+    classes_index = np.argmax(prediction, axis=-1)
+
+    classes = np.array(['setosa', 'versicolor', 'virginica'])
+    return classes[classes_index]
+    
 
 
 
