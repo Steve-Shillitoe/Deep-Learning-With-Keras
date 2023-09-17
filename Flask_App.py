@@ -1,11 +1,11 @@
 """
 This module contains a basic Flask web application for the deployment
-of a Deep Learning model.
+of a Deep Learning model that predicts the species of flower from the 
+dimensions of its sepals and petals.
 """
-from crypt import methods
 from flask import Flask, render_template, url_for, session, redirect
 from flask_wtf import FlaskForm
-from wtfforms import TextField, SubmitField 
+from wtforms import SubmitField, TextAreaField
 from tensorflow.keras.models import load_model
 import joblib
 import numpy as np
@@ -24,7 +24,7 @@ def return_prediction(model, scaler, sample_json):
     classes_index = np.argmax(prediction, axis=-1)
 
     classes = np.array(['setosa', 'versicolor', 'virginica'])
-    return classes[classes_index]
+    return classes[classes_index][0]
 
 
 
@@ -32,10 +32,10 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'mysecretkey'
 
 class FlowerForm(FlaskForm):
-    sep_len = TextField("Sepal Length")
-    sep_wid = TextField("Sepal Width")
-    pet_len = TextField("Petal Length")
-    pet_wid = TextField("Petal Width")
+    sep_len = TextAreaField("Sepal Length")
+    sep_wid = TextAreaField("Sepal Width")
+    pet_len = TextAreaField("Petal Length")
+    pet_wid = TextAreaField("Petal Width")
     
     submit = SubmitField("Analyse")
     
@@ -59,8 +59,14 @@ flower_scaler = joblib.load('iris_scaler.pkl')
 @app.route('/prediction')
 def prediction():
     content = {}
-    content["Sepal Length"] = float(session['sep_len'])
+    content["sepal_length"] = float(session['sep_len'])
+    content["sepal_width"] = float(session['sep_wid'])
+    content["petal_length"] = float(session['pet_len'])
+    content["petal_width"] = float(session['pet_wid'])
     
+    results = return_prediction(flower_model, flower_scaler, content)
+    return render_template('prediction.html', results=results)
     
+
 if __name__ == '__main__':
     app.run()
