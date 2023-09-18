@@ -1,3 +1,7 @@
+"""
+In this module a CNN is used to make an image classifyer that 
+can classify the 10 types of clothing in the MNIST Fashion dataset of images.
+"""
 from tensorflow.keras.datasets import fashion_mnist
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.models import Sequential

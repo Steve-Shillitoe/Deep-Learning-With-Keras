@@ -1,5 +1,6 @@
 """
-The CIFAR-10 dataset consists of 60,000 small, color images, which are divided into 10 different classes.
+The CIFAR-10 dataset consists of 60,000 small, color images, 
+which are divided into 10 different classes.
 
 Here are the 10 classes in the CIFAR-10 dataset:
 
@@ -18,8 +19,6 @@ Each image in the CIFAR-10 dataset is 32x32 pixels in size and is in color,
 meaning it has three color channels (red, green, and blue). 
 
 """
-
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -54,7 +53,7 @@ model.add(
     )
 model.add(MaxPool2D(pool_size=(2,2)))
 
-#Second Convolutional layer as images somewhat complext
+#Second Convolutional layer as images somewhat complex
 model.add(
     Conv2D(filters=32, kernel_size=(4,4), strides=(1,1), padding='valid', input_shape=(32,32,3), activation='relu')
     )

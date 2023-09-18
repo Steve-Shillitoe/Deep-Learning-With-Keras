@@ -3,7 +3,6 @@ In this module  TensorFlow 2 and Keras are used to build a Convolutional Neural 
 can identify cells with the maleria parasite.  
 
 Real images of varying size are used to train the model.
-
 """
 
 from random import shuffle

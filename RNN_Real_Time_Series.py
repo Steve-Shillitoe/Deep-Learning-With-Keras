@@ -1,4 +1,8 @@
-from pickletools import optimize
+"""
+In this module a simple Recurrent Neural Network is created that predicts
+values real data that varies cyclically over time.
+"""
+#from pickletools import optimize
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
