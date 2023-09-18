@@ -1,6 +1,6 @@
 """
 In this module a classification task is performed with TensorFlow.  
-Based on the values of 30 features, does someone has a cancer tumour or not.
+Based on the values of 30 features, does someone has a cancer tumour or not?
 
 This inclueds identifying and dealing with overfitting through Early Stopping Callbacks 
 and Dropout Layers.
