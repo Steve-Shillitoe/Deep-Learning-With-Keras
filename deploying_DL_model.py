@@ -1,3 +1,10 @@
+"""
+In this module a dense neural network model is created that
+predicts the type of plant from its flower dimensions.  
+
+The model and associated scaler object are saved to disc 
+for deployment to a Flask web application. 
+"""
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelBinarizer, MinMaxScaler
