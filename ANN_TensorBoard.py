@@ -1,5 +1,7 @@
 """
-In this module the built in data visualization capabilities of Tensorboard are explored.
+In this module the built in data visualization capabilities of Tensorboard are explored
+when a classification task is performed with TensorFlow.  
+Based on the values of 30 features, does someone have a cancer tumour or not?
 
 To run Tensorboard, open a command prompt in the root of this project and enter
     tensorboard --logdir logs\fit
