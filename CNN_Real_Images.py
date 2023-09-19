@@ -13,6 +13,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib.image import imread
 import os
+import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.models import Sequential, load_model
@@ -20,7 +21,16 @@ from tensorflow.keras.layers import Dense, Conv2D, MaxPool2D, Dropout, Flatten
 from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.metrics import classification_report, confusion_matrix
 
+def random_brightness_and_contrast(image):
+    # This function applies random brightness and contrast adjustments to images
 
+    # Randomly adjust brightness
+    image = tf.image.random_brightness(image, max_delta=0.2)  # You can adjust the max_delta value
+
+    # Randomly adjust contrast
+    image = tf.image.random_contrast(image, lower=0.5, upper=1.5)  # You can adjust the lower and upper values
+
+    return image
 
 ############################################################
 ### Reading in the data
@@ -50,14 +60,17 @@ image_shape = (130, 130, 3)
 # Data augmentation is a technique used to artificially increase the size of your training 
 # dataset by applying various transformations to the existing images. 
 # These transformations can include rotations, flips, shifts, zooms, and more.
-# Data augmentation helps improve the model's generalization by exposing it to a wider range of variations in the data.
+# A preprocessing function is also used to randomly adjust image brightness & contrast
+# Data augmentation helps improve the model's generalization by 
+# exposing it to a wider range of variations in the data.
 image_gen = ImageDataGenerator(rotation_range=20,
                                width_shift_range=0.1,
                                height_shift_range=0.1,
                                shear_range=0.1,
                                zoom_range=0.1,
                                horizontal_flip=True,
-                               fill_mode='nearest')
+                               fill_mode='nearest',
+                               preprocessing_function=random_brightness_and_contrast)
 
 #image_gen.flow_from_directory(train_path)
 
