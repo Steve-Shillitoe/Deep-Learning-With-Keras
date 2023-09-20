@@ -11,4 +11,4 @@ p.random_brightness(probability=0.3, min_factor=0.3, max_factor=1.2)
 p.random_contrast(probability=0.3, min_factor=0.3, max_factor=1.2)
 p.random_color(probability=0.2, min_factor=0.0, max_factor=0.75) # 0=b+W, 1=original image
 
-p.sample(50)
+p.sample(60)
