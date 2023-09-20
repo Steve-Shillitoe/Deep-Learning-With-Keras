@@ -160,3 +160,5 @@ networkx==3.1
 PyWavelets==1.4.1
 scikit-image==0.21.0
 tifffile==2023.9.18
+Augmentor==0.2.12
+tqdm==4.66.1
