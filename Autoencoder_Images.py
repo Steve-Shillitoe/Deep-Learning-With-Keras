@@ -16,6 +16,23 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Flatten, Reshape, GaussianNoise
 #from tensorflow.keras.optimizers import SGD
 
+
+def imshow(img):
+    img = img.astype(int)
+    plt.axis("off")
+    plt.imshow(img)
+    plt.show()
+
+
+def gallery_show(images):
+    images = images.astype(int)
+    for i in range(9):
+        image = images[i]
+        plt.subplot(3, 3, i + 1)
+        plt.imshow(image.astype("uint8"))
+        plt.axis("off")
+    plt.show()
+
 #####################################################
 # Image processing
 ####################################################
