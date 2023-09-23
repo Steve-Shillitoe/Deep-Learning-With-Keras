@@ -10,6 +10,7 @@ the same image with that noise removed are displayed.
 #import pandas as pd
 #import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 import tensorflow as tf
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.models import Sequential
@@ -25,13 +26,13 @@ def imshow(img):
 
 
 def gallery_show(images):
-    images = images.astype(int)
-    for i in range(9):
+    for i in range(len(images)):
         image = images[i]
         plt.subplot(3, 3, i + 1)
-        plt.imshow(image.astype("uint8"))
+        plt.imshow(np.array(image))
         plt.axis("off")
     plt.show()
+    plt.savefig('NoisyImage.jpg')
 
 #####################################################
 # Image processing
@@ -74,17 +75,17 @@ ten_noisy_images = sample(X_test[:10], training=True)
 denoised = noise_remover(ten_noisy_images)
 
 n=0
-plt.title("Original image")
-plt.imshow(X_test[n])
-plt.show()
-plt.title("Noisy image")
-plt.imshow(ten_noisy_images[n])
-plt.show()
-plt.title("Cleaned image")
-plt.imshow(denoised[n])
-plt.show()
+# plt.title("Original image")
+# plt.imshow(X_test[n])
+# plt.show()
+# plt.title("Noisy image")
+# plt.imshow(ten_noisy_images[n])
+# plt.show()
+# plt.title("Cleaned image")
+# plt.imshow(denoised[n])
+# plt.show()
 
-
+gallery_show([X_test[n],ten_noisy_images[n], denoised[n] ])
 
 
 
