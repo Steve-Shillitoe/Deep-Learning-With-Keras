@@ -1,5 +1,6 @@
 """
-In this module  TensorFlow 2 and Keras are used to build a Convolutional Neural Network that 
+In this module  TensorFlow 2 and Keras are used to build a 
+Convolutional Neural Network that 
 can identify cells with the maleria parasite.  
 
 Real images of varying size are used to train the model.
